@@ -1,0 +1,24 @@
+export default class User {
+    id;
+    username;
+    email;
+    password;
+    firstName;
+    lastName;
+    birthDate;
+    driver;
+    destLatitude;
+    destLongitude;
+    homeLatitude;
+    homeLongitude;
+    segmentPositions;
+    radiusCircle;
+    male;
+    smoke;
+    woman;
+    man;
+    speak;
+    music;
+    remember;
+    token;
+  }
