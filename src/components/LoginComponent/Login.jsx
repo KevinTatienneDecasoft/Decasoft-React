@@ -3,14 +3,17 @@ import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import axios from 'axios';
 import User from '../../models/user';
+import { FormGroup, ControlLabel, FormControl, HelpBlock, Row, Col } from 'react-bootstrap';
+import login from './login.css';
 
 const customStyles = {
     content: {
-        top: '20%',
+        top: '500px',
         left: '50%',
         right: 'auto',
         bottom: 'auto',
-        marginRight: '-50%',
+        marginRight: '-30%',
+        width: '60%',
         transform: 'translate(-50%, -50%)'
     }
 };
@@ -22,12 +25,12 @@ Modal.setAppElement('#root');
 
 class LoginComponent extends React.Component {
 
-    constructor() {
-        super();
-
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             modalIsOpen: false,
+            value: '',
             pseudo: '',
             password: '',
             firstName: '',
@@ -35,24 +38,22 @@ class LoginComponent extends React.Component {
             birthday: '',
             adrHome: '',
             errorLogin: false,
-            loginAction: false
+            loginAction: true
         };
 
+
         this.openModal = this.openModal.bind(this);
-        this.afterOpenModal = this.afterOpenModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.loginSubmit = this.loginSubmit.bind(this);
+        this.choiceLogin = this.choiceLogin.bind(this);
+
     }
 
 
     openModal() {
         this.setState({ modalIsOpen: true });
-    }
-
-    afterOpenModal() {
-        this.subtitle.style.color = '#f00';
     }
 
     closeModal() {
@@ -64,19 +65,24 @@ class LoginComponent extends React.Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
-        this.setState({
-            [name]: value
-        });
+        this.setState({ [name]: value });
+    }
+
+    choiceLogin(e) {
+        let status = e.target.id;
+        if (status == "true") {
+            this.setState({ loginAction: true });
+        } else {
+            this.setState({ ["loginAction"]: false });
+        }
+
     }
 
     loginSubmit(event) {
-        console.log('Pseudo : ' + this.state.pseudo);
-        console.log('pwd : ' + this.state.password);
         var user = new User();
         user.email = this.state.pseudo;
         user.username = this.state.pseudo;
         user.password = this.state.password;
-        console.log(user);
 
         var headers = {
             'Content-Type': 'application/json'
@@ -84,7 +90,6 @@ class LoginComponent extends React.Component {
 
         axios.post("http://" + IP + ":8080/user/login", user, headers)
             .then((response) => {
-                console.log(response.data);
                 if (!response.data) {
                     this.setState({ ["errorLogin"]: true });
 
@@ -107,110 +112,67 @@ class LoginComponent extends React.Component {
         user.email = this.state.pseudo;
         user.username = this.state.pseudo;
         user.password = this.state.password;
-        console.log(user);
-
-        
         event.preventDefault();
     }
 
     render() {
+
+        function DynamicForm(label, type, name, value, placeholder, handleInputChange) {
+            let result;
+
+            if (type != "checkbox") {
+                result = (
+                    <FormGroup>
+                        <ControlLabel>{label}</ControlLabel>
+                        <FormControl
+                            type={type}
+                            name={name}
+                            value={value}
+                            placeholder={placeholder}
+                            onChange={handleInputChange}
+                        />
+                        <FormControl.Feedback />
+                    </FormGroup>);
+            }
+
+            return result;
+        }
         let login;
 
-        if(this.state.loginAction) {
+        if (this.state.loginAction) {
             login =
-            (
-                <form onSubmit={this.loginSubmit}>
-                    <label>
-                        Pseudo / Email:
-            <input
-                            name="pseudo"
-                            type="text"
-                            value={this.state.pseudo}
-                            onChange={this.handleInputChange}
-                            required />
-                    </label>
-                    <label>
-                        Password:
-            <input
-                            name="password"
-                            type="password"
-                            value={this.state.password}
-                            onChange={this.handleInputChange}
-                            required />
-                    </label>
-                    <input type="submit" value="Login" />
-                </form>
-            );
+                (
+                    <form onSubmit={this.loginSubmit}>
+
+
+                        {DynamicForm("Pseudo / Email:", "text", "pseudo", this.state.pseudo, "Enter pseudo or email", this.handleInputChange)}
+                        {DynamicForm("Password:", "password", "password", this.state.password, "Enter password", this.handleInputChange)}
+
+                        <input className="btn btn-primary" type="submit" value="Login" />
+                    </form>
+                );
         } else {
             login =
-            (
-                <form onSubmit={this.registerSubmit}>
-                    <label>
-                        Pseudo / Email:
-                        <input
-                            name="pseudo"
-                            type="text"
-                            value={this.state.pseudo}
-                            onChange={this.handleInputChange}
-                            required />
-                    </label>
-                    <label>
-                        Password:
-                        <input
-                            name="password"
-                            type="password"
-                            value={this.state.password}
-                            onChange={this.handleInputChange}
-                            required />
-                    </label>
-                    <label>
-                        FirstName:
-                        <input
-                            name="firstName"
-                            type="text"
-                            value={this.state.firstName}
-                            onChange={this.handleInputChange}
-                            required />
-                    </label>
-                    <label>
-                        LastName:
-                        <input
-                            name="lastName"
-                            type="text"
-                            value={this.state.lastName}
-                            onChange={this.handleInputChange}
-                            required />
-                    </label>
-                    <label>
-                        Birthday:
-                        <input
-                            name="birthday"
-                            type="date"
-                            value={this.state.birthday}
-                            onChange={this.handleInputChange}
-                            required />
-                    </label>
-                    <label>
-                        Address home:
-                        <input
-                            name="adrHome"
-                            type="text"
-                            value={this.state.adrHome}
-                            onChange={this.handleInputChange}
-                            required />
-                    </label>
+                (
+                    <form onSubmit={this.registerSubmit}>
+                        {DynamicForm("Pseudo / Email:", "text", "pseudo", this.state.pseudo, "Enter pseudo or email", this.handleInputChange)}
+                        {DynamicForm("Password:", "password", "password", this.state.password, "Enter password", this.handleInputChange)}
 
-                    <input type="submit" value="Register" />
-                </form>
-            );
+                        {DynamicForm("FirstName:", "text", "firstName", this.state.firstName, "Enter firstName", this.handleInputChange)}
+                        {DynamicForm("LastName:", "text", "lastName", this.state.lastName, "Enter lastName", this.handleInputChange)}
+
+                        {DynamicForm("Birthday:", "date", "birthday", this.state.birthday, "Enter birthday", this.handleInputChange)}
+                        {DynamicForm("Address home:", "text", "adrHome", this.state.adrHome, "Enter Address Home", this.handleInputChange)}
+
+
+                        <input className="btn btn-primary" type="submit" value="Register" />
+                    </form>
+                );
         }
-
-        
-
 
         return (
             <div>
-                <button onClick={this.openModal}>Sign In / Register</button>
+                <p onClick={this.openModal}>Sign In / Register</p>
                 <Modal
                     isOpen={this.state.modalIsOpen}
                     onAfterOpen={this.afterOpenModal}
@@ -218,8 +180,24 @@ class LoginComponent extends React.Component {
                     style={customStyles}
                     contentLabel="Example Modal"
                 >
-                    <h2 ref={subtitle => this.subtitle = subtitle}>Sign In</h2>
-                    <button onClick={this.closeModal}>X</button>
+
+                    <Row>
+                        <Col sm={3} md={3}>
+                            <h2>Sign In / Register</h2>
+                        </Col>
+                        <Col sm={6} md={6}>
+                        </Col>
+                        <Col sm={3} md={3}>
+                            <p className="closeModal" onClick={this.closeModal}>X</p>
+                        </Col>
+                    </Row>
+
+
+
+                    <Row className="center">
+                        <Col sm={6} md={6} onClick={this.choiceLogin} id="true">Login</Col>
+                        <Col sm={6} md={6} onClick={this.choiceLogin} id="false">Register</Col>
+                    </Row>
 
                     {login}
                     {this.state.errorLogin ? <p>Error pseudo or password, retry please</p> : null}
@@ -227,8 +205,10 @@ class LoginComponent extends React.Component {
                 </Modal>
 
             </div>
+
         );
     }
+
 }
 
 export default LoginComponent;

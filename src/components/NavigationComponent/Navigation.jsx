@@ -1,5 +1,6 @@
 import React from 'react';
 import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import LoginComponent from '../LoginComponent/Login';
 
 
 class NavigationComponent extends React.Component {
@@ -28,7 +29,7 @@ class NavigationComponent extends React.Component {
               </Nav>
               <Nav pullRight>
                 <NavItem eventKey={4} href="#">
-                  Login
+                <LoginComponent />
                 </NavItem>
               </Nav>
             </Navbar.Collapse>
