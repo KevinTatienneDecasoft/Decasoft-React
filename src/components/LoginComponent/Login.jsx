@@ -30,7 +30,12 @@ class LoginComponent extends React.Component {
             modalIsOpen: false,
             pseudo: '',
             password: '',
-            errorLogin: false
+            firstName: '',
+            lastName: '',
+            birthday: '',
+            adrHome: '',
+            errorLogin: false,
+            loginAction: false
         };
 
         this.openModal = this.openModal.bind(this);
@@ -38,7 +43,7 @@ class LoginComponent extends React.Component {
         this.closeModal = this.closeModal.bind(this);
 
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.loginSubmit = this.loginSubmit.bind(this);
     }
 
 
@@ -64,7 +69,7 @@ class LoginComponent extends React.Component {
         });
     }
 
-    handleSubmit(event) {
+    loginSubmit(event) {
         console.log('Pseudo : ' + this.state.pseudo);
         console.log('pwd : ' + this.state.password);
         var user = new User();
@@ -80,11 +85,11 @@ class LoginComponent extends React.Component {
         axios.post("http://" + IP + ":8080/user/login", user, headers)
             .then((response) => {
                 console.log(response.data);
-                if(!response.data) {
-                    this.setState({["errorLogin"]: true});
+                if (!response.data) {
+                    this.setState({ ["errorLogin"]: true });
 
                     setTimeout(() => {
-                        this.setState({["errorLogin"]: false});
+                        this.setState({ ["errorLogin"]: false });
                     }, 2000);
                 } else {
                     this.closeModal();
@@ -97,10 +102,115 @@ class LoginComponent extends React.Component {
         event.preventDefault();
     }
 
+    registerSubmit(event) {
+        var user = new User();
+        user.email = this.state.pseudo;
+        user.username = this.state.pseudo;
+        user.password = this.state.password;
+        console.log(user);
+
+        
+        event.preventDefault();
+    }
+
     render() {
+        let login;
+
+        if(this.state.loginAction) {
+            login =
+            (
+                <form onSubmit={this.loginSubmit}>
+                    <label>
+                        Pseudo / Email:
+            <input
+                            name="pseudo"
+                            type="text"
+                            value={this.state.pseudo}
+                            onChange={this.handleInputChange}
+                            required />
+                    </label>
+                    <label>
+                        Password:
+            <input
+                            name="password"
+                            type="password"
+                            value={this.state.password}
+                            onChange={this.handleInputChange}
+                            required />
+                    </label>
+                    <input type="submit" value="Login" />
+                </form>
+            );
+        } else {
+            login =
+            (
+                <form onSubmit={this.registerSubmit}>
+                    <label>
+                        Pseudo / Email:
+                        <input
+                            name="pseudo"
+                            type="text"
+                            value={this.state.pseudo}
+                            onChange={this.handleInputChange}
+                            required />
+                    </label>
+                    <label>
+                        Password:
+                        <input
+                            name="password"
+                            type="password"
+                            value={this.state.password}
+                            onChange={this.handleInputChange}
+                            required />
+                    </label>
+                    <label>
+                        FirstName:
+                        <input
+                            name="firstName"
+                            type="text"
+                            value={this.state.firstName}
+                            onChange={this.handleInputChange}
+                            required />
+                    </label>
+                    <label>
+                        LastName:
+                        <input
+                            name="lastName"
+                            type="text"
+                            value={this.state.lastName}
+                            onChange={this.handleInputChange}
+                            required />
+                    </label>
+                    <label>
+                        Birthday:
+                        <input
+                            name="birthday"
+                            type="date"
+                            value={this.state.birthday}
+                            onChange={this.handleInputChange}
+                            required />
+                    </label>
+                    <label>
+                        Address home:
+                        <input
+                            name="adrHome"
+                            type="text"
+                            value={this.state.adrHome}
+                            onChange={this.handleInputChange}
+                            required />
+                    </label>
+
+                    <input type="submit" value="Register" />
+                </form>
+            );
+        }
+
+        
+
+
         return (
             <div>
-                <button onClick={this.openModal}>Open Modal</button>
+                <button onClick={this.openModal}>Sign In / Register</button>
                 <Modal
                     isOpen={this.state.modalIsOpen}
                     onAfterOpen={this.afterOpenModal}
@@ -110,29 +220,12 @@ class LoginComponent extends React.Component {
                 >
                     <h2 ref={subtitle => this.subtitle = subtitle}>Sign In</h2>
                     <button onClick={this.closeModal}>X</button>
-                    <form onSubmit={this.handleSubmit}>
-                        <label>
-                            Pseudo / Email:
-                            <input
-                                name="pseudo"
-                                type="text"
-                                value={this.state.pseudo}
-                                onChange={this.handleInputChange}
-                                required />
-                        </label>
-                        <label>
-                            Password:
-                            <input
-                                name="password"
-                                type="password"
-                                value={this.state.password}
-                                onChange={this.handleInputChange}
-                                required />
-                        </label>
-                        <input type="submit" value="Login" />
-                    </form>
-                    { this.state.errorLogin ? <p>Error pseudo or password, retry please</p> : null }
+
+                    {login}
+                    {this.state.errorLogin ? <p>Error pseudo or password, retry please</p> : null}
+
                 </Modal>
+
             </div>
         );
     }
