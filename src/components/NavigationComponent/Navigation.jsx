@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Nav, Navbar, NavItem } from 'react-bootstrap';
 import LoginComponent from '../LoginComponent/Login';
 
 
@@ -28,12 +28,16 @@ class NavigationComponent extends React.Component {
                 
               </Nav>
               <Nav pullRight>
-                <NavItem eventKey={4} href="#">
-                <LoginComponent />
+              <LoginComponent />
+                <NavItem>
+                
                 </NavItem>
+                
               </Nav>
             </Navbar.Collapse>
+            
         </Navbar>
+        
         );
     }
 }

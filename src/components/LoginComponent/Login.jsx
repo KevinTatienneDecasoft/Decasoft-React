@@ -1,9 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import axios from 'axios';
 import User from '../../models/user';
-import { FormGroup, ControlLabel, FormControl, HelpBlock, Row, Col } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, Row, Col } from 'react-bootstrap';
 import login from './login.css';
 
 const customStyles = {
@@ -49,6 +48,8 @@ class LoginComponent extends React.Component {
         this.loginSubmit = this.loginSubmit.bind(this);
         this.choiceLogin = this.choiceLogin.bind(this);
 
+        this.testSubmit = this.testSubmit.bind(this);
+
     }
 
 
@@ -70,15 +71,21 @@ class LoginComponent extends React.Component {
 
     choiceLogin(e) {
         let status = e.target.id;
-        if (status == "true") {
+        if (status === "true") {
             this.setState({ loginAction: true });
         } else {
-            this.setState({ ["loginAction"]: false });
+            this.setState({loginAction: false });
         }
 
     }
 
+    testSubmit(e) {
+        e.preventDefault();
+        console.log("submit");
+    }
+
     loginSubmit(event) {
+        event.preventDefault();
         var user = new User();
         user.email = this.state.pseudo;
         user.username = this.state.pseudo;
@@ -88,15 +95,19 @@ class LoginComponent extends React.Component {
             'Content-Type': 'application/json'
         }
 
+        
+        console.log("test 2");
+
         axios.post("http://" + IP + ":8080/user/login", user, headers)
             .then((response) => {
                 if (!response.data) {
-                    this.setState({ ["errorLogin"]: true });
+                    this.setState({errorLogin: true });
 
                     setTimeout(() => {
-                        this.setState({ ["errorLogin"]: false });
+                        this.setState({errorLogin: false });
                     }, 2000);
                 } else {
+                    console.log(response.data);
                     this.closeModal();
                 }
             })
@@ -104,7 +115,7 @@ class LoginComponent extends React.Component {
                 alert("Erreur serveur");
             })
 
-        event.preventDefault();
+        
     }
 
     registerSubmit(event) {
@@ -120,7 +131,7 @@ class LoginComponent extends React.Component {
         function DynamicForm(label, type, name, value, placeholder, handleInputChange) {
             let result;
 
-            if (type != "checkbox") {
+            if (type !== "checkbox") {
                 result = (
                     <FormGroup>
                         <ControlLabel>{label}</ControlLabel>
@@ -137,22 +148,19 @@ class LoginComponent extends React.Component {
 
             return result;
         }
-        let login;
+        let loginForm;
 
         if (this.state.loginAction) {
-            login =
+            loginForm =
                 (
                     <form onSubmit={this.loginSubmit}>
-
-
                         {DynamicForm("Pseudo / Email:", "text", "pseudo", this.state.pseudo, "Enter pseudo or email", this.handleInputChange)}
                         {DynamicForm("Password:", "password", "password", this.state.password, "Enter password", this.handleInputChange)}
-
                         <input className="btn btn-primary" type="submit" value="Login" />
                     </form>
                 );
         } else {
-            login =
+            loginForm =
                 (
                     <form onSubmit={this.registerSubmit}>
                         {DynamicForm("Pseudo / Email:", "text", "pseudo", this.state.pseudo, "Enter pseudo or email", this.handleInputChange)}
@@ -172,7 +180,7 @@ class LoginComponent extends React.Component {
 
         return (
             <div>
-                <p onClick={this.openModal}>Sign In / Register</p>
+                <p className="loginTitle" onClick={this.openModal}>Sign In / Register</p>
                 <Modal
                     isOpen={this.state.modalIsOpen}
                     onAfterOpen={this.afterOpenModal}
@@ -199,7 +207,7 @@ class LoginComponent extends React.Component {
                         <Col sm={6} md={6} onClick={this.choiceLogin} id="false">Register</Col>
                     </Row>
 
-                    {login}
+                    {loginForm}
                     {this.state.errorLogin ? <p>Error pseudo or password, retry please</p> : null}
 
                 </Modal>

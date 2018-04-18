@@ -26,7 +26,7 @@ class AboutComponent extends React.Component {
 
      handleClickFaq(e) {
         e.preventDefault();
-        this.setState({["status"]:true});
+        this.setState({status:true});
        
     
         console.log('The link was clicked.');
@@ -35,7 +35,7 @@ class AboutComponent extends React.Component {
     
      handleClickAbout(e) {
         e.preventDefault();
-        this.setState({["status"]:false});
+        this.setState({status:false});
         
     
         console.log('The link was clicked.');
@@ -45,7 +45,7 @@ class AboutComponent extends React.Component {
 
         let content;
 
-        if (this.state.status==true) {
+        if (this.state.status) {
             content = (
             <div className={this.state.classFaq}>
                 <Row className="show-grid">

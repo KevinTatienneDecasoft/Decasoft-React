@@ -12,3 +12,7 @@
     cursor: pointer;
     text-align: right;
 }
+
+.loginTitle {
+    color: white;
+}
