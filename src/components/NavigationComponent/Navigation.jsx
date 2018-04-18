@@ -1,6 +1,6 @@
 import React from 'react';
 import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
-
+import { BrowserRouter as Link } from 'react-router-dom';
 
 class NavigationComponent extends React.Component {
 
@@ -19,7 +19,9 @@ class NavigationComponent extends React.Component {
                   Home
                 </NavItem>
                 <NavItem eventKey={2} href="#">
-                  Around me
+                  {/* <Link to={'/findDriver'}> */}
+                    Around me
+                  {/* </Link> */}
                 </NavItem>
                 <NavItem eventKey={3} href="#">
                   About
