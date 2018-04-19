@@ -6,6 +6,8 @@ import NavigationComponent from './components/NavigationComponent/Navigation';
 import LoginComponent from './components/LoginComponent/Login';
 import FindDriverComponent from './components/FindDriverComponent/FindDriver';
 import MessageComponent from './components/MessageComponent/Message';
+import ListDestinatorComponent from './components/ListDestinatorComponent/ListDestinator';
+import ListMessageComponent from './components/ListMessageComponent/ListMessage';
 
 const imageStyle = {
       width: '100%'
@@ -39,11 +41,10 @@ class App extends Component {
         {/* <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p> */}
-        
-
-        <MessageComponent title="bonjour" status="send" date="10/10/2018"/>
-        <MessageComponent title="bonjour" status="" date="10/10/2018"/>
-
+        <div className="container">
+          <ListDestinatorComponent />
+          <ListMessageComponent />
+        </div>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />

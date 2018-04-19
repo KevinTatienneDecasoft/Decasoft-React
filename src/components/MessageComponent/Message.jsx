@@ -15,7 +15,7 @@ class MessageComponent extends React.Component {
   // Fonction permettant d'affecter la couleur au type de message 
  
     render() {
-      console.log(this.props);
+   
        let message ;
        let title = this.props.title;
        let status = this.props.status;

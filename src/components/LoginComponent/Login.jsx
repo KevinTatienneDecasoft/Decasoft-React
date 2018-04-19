@@ -107,6 +107,7 @@ class LoginComponent extends Session {
                 } else {
                     console.log(response.data);
                     user.password = "";
+                    user.token = response.data.token;
                     super.setSession(JSON.stringify(user));
                     window.location.reload();
                 }
