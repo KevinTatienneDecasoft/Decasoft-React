@@ -1,15 +1,35 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import logoMyWC from './image/logoMyWC.png';
 import './App.css';
 import NavigationComponent from './components/NavigationComponent/Navigation';
 import LoginComponent from './components/LoginComponent/Login';
 import FindDriverComponent from './components/FindDriverComponent/FindDriver';
 
+const imageStyle = {
+      width: '100%'
+};
+
+const session = localStorage.getItem("session");
+
 class App extends Component {
+
+  constructor() {
+    super();
+  }
+
+  if(session) {
+    console.log("connected !");
+  }
+  
+
+
   render() {
     return (
       <div className="App">
         <NavigationComponent />
+
+        <img src={logoMyWC} style={imageStyle} alt="logoMyWC"  />
         
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
@@ -19,8 +39,6 @@ class App extends Component {
           To get started, edit <code>src/App.js</code> and save to reload.
         </p> */}
         
-
-        <LoginComponent />
 
         <FindDriverComponent />
 

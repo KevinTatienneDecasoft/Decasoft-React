@@ -2,8 +2,9 @@ import React from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import User from '../../models/user';
-import { FormGroup, ControlLabel, FormControl, Row, Col } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, Row, Col, Radio } from 'react-bootstrap';
 import login from './login.css';
+import Session from '../../Session';
 
 const customStyles = {
     content: {
@@ -22,10 +23,10 @@ const IP = "10.31.1.166";
 Modal.setAppElement('#root');
 
 
-class LoginComponent extends React.Component {
+class LoginComponent extends Session {
 
-    constructor(props, context) {
-        super(props, context);
+    constructor() {
+        super();
 
         this.state = {
             modalIsOpen: false,
@@ -36,10 +37,10 @@ class LoginComponent extends React.Component {
             lastName: '',
             birthday: '',
             adrHome: '',
+            adrDest: '9 rue de gembloux 31500 Toulouse',
             errorLogin: false,
             loginAction: true
         };
-
 
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -105,7 +106,9 @@ class LoginComponent extends React.Component {
                     }, 2000);
                 } else {
                     console.log(response.data);
-                    this.closeModal();
+                    user.password = "";
+                    super.setSession(JSON.stringify(user));
+                    window.location.reload();
                 }
             })
             .catch((error) => {
@@ -168,6 +171,20 @@ class LoginComponent extends React.Component {
 
                         {DynamicForm("Birthday:", "date", "birthday", this.state.birthday, "Enter birthday", this.handleInputChange)}
                         {DynamicForm("Address home:", "text", "adrHome", this.state.adrHome, "Enter Address Home", this.handleInputChange)}
+                        {DynamicForm("Address Destination:", "text", "adrDest", this.state.adrDest, "", this.handleInputChange)}
+                        
+
+                        <FormGroup>
+      <Radio name="radioGroup" inline>
+        1
+      </Radio>{' '}
+      <Radio name="radioGroup" inline>
+        2
+      </Radio>{' '}
+      <Radio name="radioGroup" inline>
+        3
+      </Radio>
+    </FormGroup>
 
 
                         <input className="btn btn-primary" type="submit" value="Register" />

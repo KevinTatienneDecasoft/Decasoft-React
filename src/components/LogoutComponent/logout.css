@@ -1,0 +1,13 @@
+.center {
+    text-align: center;
+}
+
+.center :hover {
+    cursor: pointer;
+    background-color: black;
+    color: white;
+}
+
+.logoutTitle {
+    color: white;
+}
