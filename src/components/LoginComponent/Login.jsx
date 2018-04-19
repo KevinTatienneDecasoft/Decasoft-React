@@ -95,9 +95,6 @@ class LoginComponent extends React.Component {
             'Content-Type': 'application/json'
         }
 
-        
-        console.log("test 2");
-
         axios.post("http://" + IP + ":8080/user/login", user, headers)
             .then((response) => {
                 if (!response.data) {

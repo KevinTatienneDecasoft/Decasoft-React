@@ -1,7 +1,7 @@
 import React from 'react';
-import { Nav, Navbar, NavItem } from 'react-bootstrap';
 import LoginComponent from '../LoginComponent/Login';
 
+import { Nav, Navbar, NavItem } from 'react-bootstrap';
 
 class NavigationComponent extends React.Component {
 
@@ -20,7 +20,9 @@ class NavigationComponent extends React.Component {
                   Home
                 </NavItem>
                 <NavItem eventKey={2} href="#">
-                  Around me
+                  {/* <Link to={'/findDriver'}> */}
+                    Around me
+                  {/* </Link> */}
                 </NavItem>
                 <NavItem eventKey={3} href="#">
                   About
