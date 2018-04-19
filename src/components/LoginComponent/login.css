@@ -16,3 +16,7 @@
 .loginTitle {
     color: white;
 }
+
+.optionSelected {
+    border: 4px solid rgb(45, 128, 45);
+}

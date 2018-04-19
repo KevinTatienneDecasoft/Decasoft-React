@@ -18,6 +18,7 @@ class NavigationComponent extends Session {
 
     if (session) {
       let object = JSON.parse(session);
+      console.log(object);
       let accountName = object.username;
 
       navCollapse = (
