@@ -27,18 +27,12 @@ class AboutComponent extends React.Component {
      handleClickFaq(e) {
         e.preventDefault();
         this.setState({status:true});
-       
-    
-        console.log('The link was clicked.');
     
     }
     
      handleClickAbout(e) {
         e.preventDefault();
         this.setState({status:false});
-        
-    
-        console.log('The link was clicked.');
     
     }
     render() {
