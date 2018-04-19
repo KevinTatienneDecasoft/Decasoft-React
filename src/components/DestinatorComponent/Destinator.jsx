@@ -19,7 +19,7 @@ class DestinatorComponent extends Session {
         var count = this.props.number;
         return (
             <Col  className="destinator">
-
+            
                 <p>{pseudo}</p>
                 <p>{count} message(s)</p>
 
