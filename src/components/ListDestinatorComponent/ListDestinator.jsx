@@ -7,26 +7,23 @@ import DestinatorComponent from '../DestinatorComponent/Destinator';
 
 import Session from '../../Session';
 
-const headers = {
-    'Content-Type': 'application/json'
-}
+const axiosConfig = {
+    headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+    }
+};
+
 const IP = "10.31.1.166";
+
 class ListDestinatorComponent extends Session {
 
     constructor() {
         super();
-        this.state = {
-            listDestinator: [
-                {
-                    pseudo: "Zizi",
-                    nombre: 15
-                },
-                {
-                    pseudo: "Zizi2",
-                    nombre: 18
-                }]
+            this.state = {
+                listDestinator : []
 
-        }
+            }
 
         this.loginSubmit();
     }
@@ -36,40 +33,40 @@ class ListDestinatorComponent extends Session {
 
         if (session) {
 
-            console.log(session);
             let object = JSON.parse(session);
-            let accountName = object.token;
-            console.log(accountName);
+
+            let token = object.token;
 
 
-            
-            axios.post("http://" + IP + ":8080/chat/getAllMessages", accountName, headers)
-                .then((response) => {
-                    if (!response.data) {
+            axios.post("http://" + IP + ":8080/chat/getAllMessages", token, axiosConfig)
+                .then((res) => {
+                    if (!res.data) {
                         console.log("error");
                     } else {
-                        console.log(response.data);
-                       
                         
-                       // window.location.reload();
+                        this.setState({listDestinator:res.data});
+                     
                     }
                 })
-                .catch((error) => {
-                    alert("Erreur serveur");
-                });
-                
+
         }
 
     }
 
     _renderObject() {
-        return Object.entries(this.state.listDestinator).map(([key, value], i) => {
-            console.log(value.pseudo);
-            return (
-                <DestinatorComponent key={i} pseudo={value.pseudo} number={value.nombre} />
+        
+        let content = [];
+        
+            this.state.listDestinator.forEach(e => {
+                
+                let pseudo = Object.keys(e)[0];
+                let tabMessage = e[pseudo];
+                console.log(tabMessage.length)
+                content.push(<DestinatorComponent pseudo={pseudo} nombre=""/>)
+                
+            })
 
-            )
-        })
+        return content;
     }
 
     render() {
