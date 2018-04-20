@@ -5,6 +5,10 @@ import { Nav, Navbar, NavItem } from 'react-bootstrap';
 
 class NavigationComponent extends React.Component {
 
+  componentWillMount() {
+    
+  }
+
     render() {
         return (
         <Navbar inverse collapseOnSelect>

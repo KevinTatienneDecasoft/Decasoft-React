@@ -6,6 +6,27 @@ import LoginComponent from './components/LoginComponent/Login';
 import FindDriverComponent from './components/FindDriverComponent/FindDriver';
 
 class App extends Component {
+
+  constructor(props) {
+    super();
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        // this.setState({ lat: parseFloat(position.coords.latitude), lng: parseFloat(position.coords.longitude) });
+        setTimeout(() => {
+          this.setState({ lat: parseFloat(position.coords.latitude), lng: parseFloat(position.coords.longitude) });
+          console.log(this.state.lat);
+          console.log(this.state.lng)
+        }, 2000);
+      },
+      error => console.log(error)
+    );
+  }
+
+  state = {
+    lat: 0,
+    lng: 0
+}
+
   render() {
     return (
       <div className="App">
@@ -22,8 +43,7 @@ class App extends Component {
 
         <LoginComponent />
 
-        <FindDriverComponent />
-
+        <FindDriverComponent lat={this.state.lat} lng={this.state.lng} />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
       </div>
