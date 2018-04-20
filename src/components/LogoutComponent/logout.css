@@ -8,15 +8,6 @@
     color: white;
 }
 
-.closeModal {
-    cursor: pointer;
-    text-align: right;
-}
-
-.loginTitle {
+.logoutTitle {
     color: white;
-}
-
-.optionSelected {
-    border: 4px solid rgb(45, 128, 45);
 }
