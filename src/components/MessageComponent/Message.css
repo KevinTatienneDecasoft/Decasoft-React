@@ -1,0 +1,14 @@
+.sendMessage{
+    background-color: green;
+    padding : 10px;
+    text-align: right;
+    color : white;
+
+}
+
+.receveMessage{
+    background-color: blue;
+    padding : 10px;
+    text-align: left;
+    color : white;
+}
