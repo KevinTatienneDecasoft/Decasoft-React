@@ -5,6 +5,8 @@ import User from '../../models/user';
 import { FormGroup, ControlLabel, FormControl, Row, Col, Radio } from 'react-bootstrap';
 import login from './login.css';
 import Session from '../../Session';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 //images
 import smoke from '../../image/smoke.png';
@@ -62,7 +64,8 @@ class LoginComponent extends Session {
             music: false,
             speak: false,
             womanOption: false,
-            manOption: false
+            manOption: false,
+            radiusCircle: 500,
         };
 
         this.openModal = this.openModal.bind(this);
@@ -72,6 +75,8 @@ class LoginComponent extends Session {
         this.loginSubmit = this.loginSubmit.bind(this);
         this.registerSubmit = this.registerSubmit.bind(this);
         this.choiceLogin = this.choiceLogin.bind(this);
+        this.radiusChange = this.radiusChange.bind(this);
+
 
         this.choiceOption = this.choiceOption.bind(this);
 
@@ -82,7 +87,6 @@ class LoginComponent extends Session {
     choiceOption(e) {
         let status = this.state[e.target.alt];
         this.setState({ [e.target.alt]: !status });
-        console.log(this.state);
     }
 
     openModal() {
@@ -144,7 +148,7 @@ class LoginComponent extends Session {
             })
             .catch((error) => {
                 alert("Erreur serveur");
-            })
+            });
 
 
     }
@@ -156,10 +160,14 @@ class LoginComponent extends Session {
 
     getStatusByValue(status, stateStatus) {
         let statusResult = false;
-        if(stateStatus === status) {
+        if (stateStatus === status) {
             statusResult = true;
         }
         return statusResult;
+    }
+
+    radiusChange(value) {
+        this.setState({ radiusCircle: value });
     }
 
     registerSubmit(event) {
@@ -171,7 +179,7 @@ class LoginComponent extends Session {
         user.username = this.state.pseudo;
         user.password = this.state.password;
         user.smoke = this.state.smoke;
-        user.music = this.state.music;        
+        user.music = this.state.music;
         user.speak = this.state.speak;
         user.woman = this.state.womanOption;
         user.man = this.state.manOption;
@@ -180,7 +188,7 @@ class LoginComponent extends Session {
 
         let dateENG = this.state.birthday;
         user.birthDate = this.getDateFr(dateENG);
-        //radius circle
+        user.radiusCircle = this.state.radiusCircle.toString();
 
         let adrHome = this.state.adrHome;
         let adrDest = this.state.adrDest;
@@ -189,6 +197,21 @@ class LoginComponent extends Session {
 
         console.log(user);
         console.log(this.state);
+
+        //headers voir comme julien
+        /*
+        axios.post("http://" + IP + ":8080/user/register", user, headers)
+            .then((response) => {
+                console.log(response);
+                if (!response.data) {
+                } else {
+                }
+            })
+            .catch((error) => {
+                alert("Erreur serveur");
+            });
+            */
+
     }
 
     render() {
@@ -229,6 +252,7 @@ class LoginComponent extends Session {
             loginForm =
                 (
                     <form onSubmit={this.registerSubmit}>
+
                         {DynamicForm("Email:", "email", "email", this.state.email, "Enter email", this.handleInputChange)}
                         {DynamicForm("Password:", "password", "password", this.state.password, "Enter password", this.handleInputChange)}
 
@@ -252,13 +276,13 @@ class LoginComponent extends Session {
                         <Row>
                             <Col md={1}></Col>
                             <Col md={3}>
-                                <img src={smoke} style={imageStyle} onClick={this.choiceOption} className={this.state.smoke ? 'optionSelected': null} alt="smoke" />
+                                <img src={smoke} style={imageStyle} onClick={this.choiceOption} className={this.state.smoke ? 'optionSelected' : null} alt="smoke" />
                             </Col>
                             <Col md={3}>
-                                <img src={music} style={imageStyle} onClick={this.choiceOption} className={this.state.music ? 'optionSelected': null} alt="music" />
+                                <img src={music} style={imageStyle} onClick={this.choiceOption} className={this.state.music ? 'optionSelected' : null} alt="music" />
                             </Col>
                             <Col md={3}>
-                                <img src={blabla} style={imageStyle} onClick={this.choiceOption} className={this.state.speak ? 'optionSelected': null} alt="speak" />
+                                <img src={blabla} style={imageStyle} onClick={this.choiceOption} className={this.state.speak ? 'optionSelected' : null} alt="speak" />
                             </Col>
                         </Row>
                         <p></p>
@@ -266,14 +290,20 @@ class LoginComponent extends Session {
                         <Row>
                             <Col md={3}></Col>
                             <Col md={3}>
-                                <img src={woman} style={imageStyle} onClick={this.choiceOption} className={this.state.womanOption ? 'optionSelected': null} alt="womanOption" />
+                                <img src={woman} style={imageStyle} onClick={this.choiceOption} className={this.state.womanOption ? 'optionSelected' : null} alt="womanOption" />
                             </Col>
                             <Col md={3}>
-                                <img src={man} style={imageStyle} onClick={this.choiceOption} className={this.state.manOption ? 'optionSelected': null} alt="manOption" />
+                                <img src={man} style={imageStyle} onClick={this.choiceOption} className={this.state.manOption ? 'optionSelected' : null} alt="manOption" />
                             </Col>
                         </Row>
 
-
+                        <p></p>
+                        <div className="center">
+                            <ControlLabel>Radius meeting point</ControlLabel>
+                            <h3>{this.state.radiusCircle} meters</h3>
+                        </div>
+                        <Slider min={0} max={2000} defaultValue={500} onChange={this.radiusChange} />
+                        <p></p>
                         <input className="btn btn-primary" type="submit" value="Register" />
                     </form>
                 );
@@ -289,9 +319,6 @@ class LoginComponent extends Session {
                     style={customStyles}
                     contentLabel="Example Modal"
                 >
-
-
-                    
                     <Row>
                         <Col sm={8} md={8}>
                             <h2>Sign In / Register</h2>
@@ -304,19 +331,19 @@ class LoginComponent extends Session {
                     </Row>
                     <Row>
 
-                    <Col sm={4} md={4}>
+                        <Col sm={4} md={4}>
                         </Col>
 
                         <Col sm={4} md={4}>
-                        <img src={loginImg} style={imageStyle} alt="login" />
+                            <img src={loginImg} style={imageStyle} alt="login" />
                         </Col>
 
                         <Col sm={4} md={4}>
                         </Col>
-                        </Row>
-                    
+                    </Row>
 
-                    <Row className="center">
+
+                    <Row className="center centerBtn">
                         <Col sm={6} md={6} onClick={this.choiceLogin} id="true">Login</Col>
                         <Col sm={6} md={6} onClick={this.choiceLogin} id="false">Register</Col>
                     </Row>
