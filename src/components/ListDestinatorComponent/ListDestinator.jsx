@@ -4,6 +4,7 @@ import axios from 'axios';
 import User from '../../models/user';
 import { FormGroup, ControlLabel, FormControl, Row, Col, Radio, Grid } from 'react-bootstrap';
 import DestinatorComponent from '../DestinatorComponent/Destinator';
+import ListMessageComponent from '../ListMessageComponent/ListMessage';
 
 import Session from '../../Session';
 
@@ -20,15 +21,15 @@ class ListDestinatorComponent extends Session {
 
     constructor() {
         super();
-            this.state = {
-                listDestinator : []
+        this.state = {
+            listDestinator: []
 
-            }
+        }
 
-        this.loginSubmit();
+        //this.getAllMessages();
     }
 
-    loginSubmit() {
+    getAllMessages() {
         let session = super.getSession();
 
         if (session) {
@@ -43,9 +44,9 @@ class ListDestinatorComponent extends Session {
                     if (!res.data) {
                         console.log("error");
                     } else {
-                        
-                        this.setState({listDestinator:res.data});
-                     
+
+                        this.setState({ listDestinator: res.data });
+
                     }
                 })
 
@@ -54,28 +55,35 @@ class ListDestinatorComponent extends Session {
     }
 
     _renderObject() {
-        
+
         let content = [];
-        
-            this.state.listDestinator.forEach(e => {
-                
-                let pseudo = Object.keys(e)[0];
-                let tabMessage = e[pseudo];
-                console.log(tabMessage.length)
-                content.push(<DestinatorComponent pseudo={pseudo} nombre=""/>)
-                
-            })
+
+        this.state.listDestinator.forEach(e => {
+
+            let pseudo = Object.keys(e)[0];
+            let tabMessage = e[pseudo];
+            console.log(tabMessage.length)
+            content.push(<DestinatorComponent pseudo={pseudo} nombre="" />)
+
+        })
 
         return content;
     }
 
     render() {
         return (
-            <Grid>
-                <Row>
-                    {this._renderObject()}
-                </Row>
-            </Grid>
+            <Row>
+                <Col md={3}>
+                    <ul class="list-group">
+                        <DestinatorComponent pseudo="toto" number="20" />
+                        <DestinatorComponent pseudo="titi" number="20" />
+                    </ul>
+                </Col>
+                <Col md={9}>
+                    <ListMessageComponent />
+                </Col>
+                {this._renderObject()}
+            </Row>
         )
     }
 

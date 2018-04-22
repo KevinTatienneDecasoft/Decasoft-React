@@ -3,12 +3,13 @@
     padding : 10px;
     text-align: right;
     color : white;
-
+    margin: 1%;
 }
 
 .receveMessage{
-    background-color: blue;
+    background-color: rgb(42, 113, 219);
     padding : 10px;
     text-align: left;
     color : white;
+    margin: 1%;
 }

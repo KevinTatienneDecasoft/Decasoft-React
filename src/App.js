@@ -9,6 +9,8 @@ import MessageComponent from './components/MessageComponent/Message';
 import ListDestinatorComponent from './components/ListDestinatorComponent/ListDestinator';
 import ListMessageComponent from './components/ListMessageComponent/ListMessage';
 
+import DestinatorComponent from './components/DestinatorComponent/Destinator';
+
 const imageStyle = {
       width: '100%'
 };
@@ -41,9 +43,9 @@ class App extends Component {
         {/* <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p> */}
-        <div className="container">
+        <FindDriverComponent />
+        <div className="container-fluid">
           <ListDestinatorComponent />
-          <ListMessageComponent />
         </div>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
