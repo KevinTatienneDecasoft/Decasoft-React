@@ -28,6 +28,8 @@ const customStyles = {
 };
 
 const IP = "10.31.1.166";
+const DRIVER = "Driver";
+const MAN = "Man";
 
 Modal.setAppElement('#root');
 
@@ -45,13 +47,14 @@ class LoginComponent extends Session {
             modalIsOpen: false,
             value: '',
             pseudo: '',
+            email: '',
             password: '',
             firstName: '',
             lastName: '',
             birthday: '',
             adrHome: '',
-            sexe: 'Man',
-            statusUser: 'Driver',
+            sexe: MAN,
+            statusUser: DRIVER,
             adrDest: '9 rue de gembloux 31500 Toulouse',
             errorLogin: false,
             loginAction: true,
@@ -115,7 +118,6 @@ class LoginComponent extends Session {
 
     loginSubmit(event) {
         event.preventDefault();
-        console.log(this);
         var user = new User();
         user.email = this.state.pseudo;
         user.username = this.state.pseudo;
@@ -147,19 +149,46 @@ class LoginComponent extends Session {
 
     }
 
+    getDateFr(dateEn) {
+        var parts = dateEn.split('-');
+        return parts[2] + '/' + parts[1] + '/' + parts[0];
+    }
+
+    getStatusByValue(status, stateStatus) {
+        let statusResult = false;
+        if(stateStatus === status) {
+            statusResult = true;
+        }
+        return statusResult;
+    }
+
     registerSubmit(event) {
         event.preventDefault();
         var user = new User();
-        user.email = this.state.pseudo;
+        user.firstName = this.state.firstName;
+        user.lastName = this.state.lastName;
+        user.email = this.state.email;
         user.username = this.state.pseudo;
         user.password = this.state.password;
-        user.birthDate = this.state.birthday;
-        user.adrHome = this.state.adrHome;
-        user.adrDest = this.state.adrDest;
         user.smoke = this.state.smoke;
-        user.music = this.state.music;
+        user.music = this.state.music;        
+        user.speak = this.state.speak;
+        user.woman = this.state.womanOption;
+        user.man = this.state.manOption;
+        user.driver = this.getStatusByValue(DRIVER, this.state.statusUser);
+        user.male = this.getStatusByValue(MAN, this.state.sexe);
+
+        let dateENG = this.state.birthday;
+        user.birthDate = this.getDateFr(dateENG);
+        //radius circle
+
+        let adrHome = this.state.adrHome;
+        let adrDest = this.state.adrDest;
+        //calculs longitudes latitudes
+
 
         console.log(user);
+        console.log(this.state);
     }
 
     render() {
@@ -177,6 +206,7 @@ class LoginComponent extends Session {
                             value={value}
                             placeholder={placeholder}
                             onChange={handleInputChange}
+                            required="true"
                         />
                         <FormControl.Feedback />
                     </FormGroup>);
@@ -199,7 +229,7 @@ class LoginComponent extends Session {
             loginForm =
                 (
                     <form onSubmit={this.registerSubmit}>
-                        {DynamicForm("Pseudo / Email:", "text", "pseudo", this.state.pseudo, "Enter pseudo or email", this.handleInputChange)}
+                        {DynamicForm("Email:", "email", "email", this.state.email, "Enter email", this.handleInputChange)}
                         {DynamicForm("Password:", "password", "password", this.state.password, "Enter password", this.handleInputChange)}
 
                         {DynamicForm("FirstName:", "text", "firstName", this.state.firstName, "Enter firstName", this.handleInputChange)}
