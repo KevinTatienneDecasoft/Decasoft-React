@@ -6,6 +6,7 @@ import { FormGroup, ControlLabel, FormControl, Row, Col, Radio } from 'react-boo
 import login from './login.css';
 import Session from '../../Session';
 import Slider from 'rc-slider';
+import Geocode from 'react-geocode';
 import 'rc-slider/assets/index.css';
 
 //images
@@ -29,14 +30,26 @@ const customStyles = {
     }
 };
 
-const IP = "10.31.1.166";
+//const IP = "10.31.1.166";
+const IP = "192.168.0.11";
 const DRIVER = "Driver";
 const MAN = "Man";
+const HOME = "Home";
+const DEST = "Dest";
+
+Geocode.setApiKey("AIzaSyA50y7GQTZUHEo5e2kKHffvzv9xOUGop3E");
 
 Modal.setAppElement('#root');
 
 const imageStyle = {
     width: '70%'
+};
+
+const axiosConfig = {
+    headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+    }
 };
 
 
@@ -66,6 +79,10 @@ class LoginComponent extends Session {
             womanOption: false,
             manOption: false,
             radiusCircle: 500,
+            destLatitude: 0,
+            destLongitude: 0,
+            homeLatitude: 0,
+            homeLongitude: 0
         };
 
         this.openModal = this.openModal.bind(this);
@@ -170,6 +187,33 @@ class LoginComponent extends Session {
         this.setState({ radiusCircle: value });
     }
 
+    // Get latidude & longitude from address.
+    getLongLat(adr, status) {
+        let responseCoord = null;
+        return Geocode.fromAddress(adr).then(
+            response => {
+                responseCoord = response.results[0].geometry.location;
+                
+                if(status === DEST) {
+                    this.setState({
+                        destLatitude: responseCoord.lat,
+                        destLongitude: responseCoord.lng
+                    });
+                } else {
+                    this.setState({
+                        homeLatitude: responseCoord.lat,
+                        homeLongitude: responseCoord.lng
+                    });
+                }
+                
+            },
+            error => {
+                console.error(error);
+            }
+        );
+
+    }
+
     registerSubmit(event) {
         event.preventDefault();
         var user = new User();
@@ -194,24 +238,26 @@ class LoginComponent extends Session {
         let adrDest = this.state.adrDest;
         //calculs longitudes latitudes
 
+        this.getLongLat(adrHome, HOME).then(result => this.getLongLat(adrDest, DEST)).then(result =>{
+            user.destLatitude = this.state.destLatitude;
+            user.destLongitude = this.state.destLongitude;
+            user.homeLatitude = this.state.homeLatitude;
+            user.homeLongitude = this.state.homeLongitude;
 
-        console.log(user);
-        console.log(this.state);
+            console.log(user);
+        });
 
-        //headers voir comme julien
-        /*
-        axios.post("http://" + IP + ":8080/user/register", user, headers)
+        axios.post("http://" + IP + ":8080/user/register", user, axiosConfig)
             .then((response) => {
                 console.log(response);
                 if (!response.data) {
+                    console.log(response.data);
                 } else {
                 }
             })
             .catch((error) => {
                 alert("Erreur serveur");
             });
-            */
-
     }
 
     render() {
@@ -252,7 +298,7 @@ class LoginComponent extends Session {
             loginForm =
                 (
                     <form onSubmit={this.registerSubmit}>
-
+                        {DynamicForm("Pseudo:", "text", "pseudo", this.state.pseudo, "Enter pseudo", this.handleInputChange)}
                         {DynamicForm("Email:", "email", "email", this.state.email, "Enter email", this.handleInputChange)}
                         {DynamicForm("Password:", "password", "password", this.state.password, "Enter password", this.handleInputChange)}
 
