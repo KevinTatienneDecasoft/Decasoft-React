@@ -7,6 +7,7 @@ import DestinatorComponent from '../DestinatorComponent/Destinator';
 import ListMessageComponent from '../ListMessageComponent/ListMessage';
 
 import Session from '../../Session';
+import Config from '../../Config';
 
 const axiosConfig = {
     headers: {
@@ -14,8 +15,6 @@ const axiosConfig = {
         "Access-Control-Allow-Origin": "*",
     }
 };
-
-const IP = "10.31.1.166";
 
 class ListDestinatorComponent extends Session {
 
@@ -26,7 +25,7 @@ class ListDestinatorComponent extends Session {
 
         }
 
-        //this.getAllMessages();
+        this.getAllMessages();
     }
 
     getAllMessages() {
@@ -39,17 +38,14 @@ class ListDestinatorComponent extends Session {
             let token = object.token;
 
 
-            axios.post("http://" + IP + ":8080/chat/getAllMessages", token, axiosConfig)
-                .then((res) => {
-                    if (!res.data) {
-                        console.log("error");
-                    } else {
-
-                        this.setState({ listDestinator: res.data });
-
-                    }
-                })
-
+            axios.post("http://" + Config.IP() + ":" + Config.PORT() + "/chat/getAllMessages", token, axiosConfig).then((res) => {
+                if (!res.data) {
+                    console.log("error");
+                } else {
+                    console.log(res.data);
+                    //this.setState({ listDestinator: res.data });
+                }
+            });
         }
 
     }

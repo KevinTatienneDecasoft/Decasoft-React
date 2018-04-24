@@ -27,7 +27,6 @@ class DestinatorComponent extends Session {
 
 
     render() {
-        console.log(this.props);
         var pseudo = this.props.pseudo;
         var messages = this.props.number;
         return (

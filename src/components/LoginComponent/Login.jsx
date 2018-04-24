@@ -16,6 +16,7 @@ import blabla from '../../image/blabla.png';
 import woman from '../../image/woman.png';
 import man from '../../image/man.png';
 import loginImg from '../../image/login.png';
+import Config from '../../Config';
 
 const customStyles = {
     content: {
@@ -72,6 +73,7 @@ class LoginComponent extends Session {
             statusUser: DRIVER,
             adrDest: '9 rue de gembloux 31500 Toulouse',
             errorLogin: false,
+            successRegister: false,
             loginAction: true,
             smoke: false,
             music: false,
@@ -148,7 +150,7 @@ class LoginComponent extends Session {
             'Content-Type': 'application/json'
         }
 
-        axios.post("http://" + IP + ":8080/user/login", user, headers)
+        axios.post("http://" + Config.IP() + ":" + Config.PORT() + "/user/login", user, headers)
             .then((response) => {
                 if (!response.data) {
                     this.setState({ errorLogin: true });
@@ -166,8 +168,6 @@ class LoginComponent extends Session {
             .catch((error) => {
                 alert("Erreur serveur");
             });
-
-
     }
 
     getDateFr(dateEn) {
@@ -193,8 +193,8 @@ class LoginComponent extends Session {
         return Geocode.fromAddress(adr).then(
             response => {
                 responseCoord = response.results[0].geometry.location;
-                
-                if(status === DEST) {
+
+                if (status === DEST) {
                     this.setState({
                         destLatitude: responseCoord.lat,
                         destLongitude: responseCoord.lng
@@ -205,7 +205,7 @@ class LoginComponent extends Session {
                         homeLongitude: responseCoord.lng
                     });
                 }
-                
+
             },
             error => {
                 console.error(error);
@@ -236,28 +236,30 @@ class LoginComponent extends Session {
 
         let adrHome = this.state.adrHome;
         let adrDest = this.state.adrDest;
-        //calculs longitudes latitudes
 
-        this.getLongLat(adrHome, HOME).then(result => this.getLongLat(adrDest, DEST)).then(result =>{
+        this.getLongLat(adrHome, HOME).then(result => this.getLongLat(adrDest, DEST)).then(result => {
             user.destLatitude = this.state.destLatitude;
             user.destLongitude = this.state.destLongitude;
             user.homeLatitude = this.state.homeLatitude;
             user.homeLongitude = this.state.homeLongitude;
-
-            console.log(user);
-        });
-
-        axios.post("http://" + IP + ":8080/user/register", user, axiosConfig)
-            .then((response) => {
-                console.log(response);
+            
+            //console.log(user);
+            axios.post("http://" + Config.IP() + ":" + Config.PORT() + "/user/register", user, axiosConfig).then((response) => {
                 if (!response.data) {
-                    console.log(response.data);
+                    
                 } else {
+                    console.log(response);
+                    this.setState({ successRegister: true });
+
+                    setTimeout(() => {
+                        this.setState({ successRegister: false });
+                        this.setState({ loginAction: true });
+                    }, 2000);
                 }
-            })
-            .catch((error) => {
+            }).catch((error) => {
                 alert("Erreur serveur");
             });
+        });
     }
 
     render() {
@@ -395,8 +397,8 @@ class LoginComponent extends Session {
                     </Row>
 
                     {loginForm}
-                    {this.state.errorLogin ? <p>Error pseudo or password, retry please</p> : null}
-
+                    {this.state.errorLogin ? <div class="alert alert-danger" role="alert">Error pseudo or password, retry login</div> : null}
+                    {this.state.successRegister ? <div class="alert alert-success" role="alert">Register ok ! Sign in now !</div> : null}
                 </Modal>
 
             </div>

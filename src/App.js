@@ -8,6 +8,7 @@ import FindDriverComponent from './components/FindDriverComponent/FindDriver';
 import MessageComponent from './components/MessageComponent/Message';
 import ListDestinatorComponent from './components/ListDestinatorComponent/ListDestinator';
 import ListMessageComponent from './components/ListMessageComponent/ListMessage';
+import ProfilComponent from './components/ProfilComponent/Profil';
 
 import DestinatorComponent from './components/DestinatorComponent/Destinator';
 
@@ -45,6 +46,7 @@ class App extends Component {
         </p> */}
         <FindDriverComponent />
         <div className="container-fluid">
+          <ProfilComponent />
           <ListDestinatorComponent />
         </div>
 
