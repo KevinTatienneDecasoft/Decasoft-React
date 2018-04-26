@@ -22,6 +22,7 @@ class ListMessageComponent extends Session {
         this.state = {
             messageToSend: '',
             listMessage: [
+                /*
                 {
                     date: "10/10/2018",
                     title: "Bonjour , tu vas bien !",
@@ -46,7 +47,7 @@ class ListMessageComponent extends Session {
                     date: "Zizi2",
                     title: "Ouais ça roule et toi ?",
                     status: "recive"
-                }
+                }*/
             ]
 
         }
@@ -66,43 +67,65 @@ class ListMessageComponent extends Session {
 
     sendMessage() {
         let messageValue = this.state.messageToSend;
-        if(messageValue) {
+        if (messageValue) {
             let date = "DATE A VOIR";
             let messageObject = {
                 date: date,
                 title: messageValue,
                 status: "send"
             }
-            this.setState({listMessage: this.state.listMessage.concat(messageObject)});
+            this.setState({ listMessage: this.state.listMessage.concat(messageObject) });
         }
         else {
             alert('Message is empty');
         }
-        
+
     }
 
 
-    _renderObject() {
-        return Object.entries(this.state.listMessage).map(([key, value], i) => {
 
-            return (
-                <MessageComponent key={i} status={value.status} date={value.date} title={value.title} />
-
-            )
-        })
-    }
 
     render() {
-        return (
-            <Grid>
-                <Row>
-                    {this._renderObject()}
-                </Row>
-                <Row>
+        let renderMessages;
+
+        console.log("-----");
+        console.log(this.props.listMessage);
+
+        this.setState({ listMessage: this.props.listMessage });
+
+        if (this.state.listMessage != null) {
+            let contentTab = [];
+            Object.entries(this.state.listMessage).map(([key, value], i) => {
+                contentTab.push(<MessageComponent key={i} status={value.status} date={value.date} title={value.title} />);
+            });
+
+            renderMessages = contentTab;
+        }
+
+
+        let renderForm;
+        if (this.state.listMessage != null) {
+            let formContent = (
+                <div>
                     <textarea name="body" style={textareaStyle} name="messageToSend" onChange={this.handleChange} value={this.state.messageToSend}>
                     </textarea>
                     <button className="btn btn-primary" onClick={this.sendMessage} >Send</button>
+                </div>
+            );
+            renderForm = formContent;
+        }
 
+
+
+
+
+        return (
+            <Grid>
+                <Row>
+                    {renderMessages}
+                </Row>
+                <Row>
+                    {renderForm}
                 </Row>
             </Grid>
         )

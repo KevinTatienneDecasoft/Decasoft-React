@@ -21,8 +21,8 @@ class DestinatorComponent extends Session {
     }
 
     openChat(e) {
-        console.log(e.target);
-        console.log(e.target.id);
+        let pseudo = e.target.id;
+        console.log(pseudo);
     }
 
 
@@ -39,7 +39,7 @@ class DestinatorComponent extends Session {
                         <p>{pseudo}</p>
                     </Col>
                     <Col md={4}>
-                        <img src={chatImg} style={imageStyle} onClick={this.openChat} alt="chat" id="id du destinataire" />
+                        <img src={chatImg} style={imageStyle} onClick={this.openChat} alt="chat" id={pseudo} />
                     </Col>
                 </Row>
                 <p>{messages} message(s)</p>
