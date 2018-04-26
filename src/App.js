@@ -61,8 +61,9 @@ class App extends Component {
           To get started, edit <code>src/App.js</code> and save to reload.
         </p> */}
         <div className="container-fluid">
-          {/*<ProfilComponent /> */}
-          <ListDestinatorComponent />
+          {/*<ProfilComponent />
+          <ListDestinatorComponent /> */}
+          
         </div>
         
 

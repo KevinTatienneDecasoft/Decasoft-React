@@ -8,7 +8,7 @@ import { Nav, Navbar, NavItem } from 'react-bootstrap';
 // class NavigationComponent extends React.Component {
 
 //   componentWillMount() {
-    
+
 //   }
 
 //     render() {
@@ -42,59 +42,51 @@ class NavigationComponent extends Session {
 
       navCollapse = (
         <Navbar.Collapse>
-        <Nav>
-          <NavItem eventKey={1} href="#">
-            Home
+          <Nav>
+            <NavItem eventKey={1} href="/">
+              Home
                 </NavItem>
-          <NavItem eventKey={2} href="#">
-            Map
+            <NavItem eventKey={2} href="/map">
+              Map
                 </NavItem>
-          <NavItem eventKey={3} href="#">
-            {accountName}
-          </NavItem>
-          <NavItem eventKey={4} href="#">
-            {/* <Link to={'/findDriver'}> */}
-            Around me
-                  {/* </Link> */}
-          </NavItem>
-          <NavItem eventKey={5} href="#">
-            About
+            <NavItem eventKey={3} href="/nameAccount">
+              {accountName}
+            </NavItem>
+            
+            <NavItem eventKey={5} href="/about">
+              About
                 </NavItem>
 
-        </Nav>
-        <Nav pullRight>
-          <LogoutComponent />
-          <NavItem>
+          </Nav>
+          <Nav pullRight>
+            <LogoutComponent />
+            <NavItem>
 
-          </NavItem>
+            </NavItem>
 
-        </Nav>
+          </Nav>
         </Navbar.Collapse>
-        );
+      );
     } else {
       navCollapse = (
         <Navbar.Collapse>
-        <Nav>
-          <NavItem eventKey={1} href="#">Home</NavItem>
-          <NavItem eventKey={4} href="#">
-            {/* <Link to={'/findDriver'}> */}
-            Around me
-                  {/* </Link> */}
-          </NavItem>
-          <NavItem eventKey={5} href="#">
-            About
+          <Nav>
+            <NavItem eventKey={1} href="/">Home</NavItem>
+            
+            <NavItem eventKey={5} href="/about">
+              About
                 </NavItem>
 
-        </Nav>
-        <Nav pullRight>
-        <LoginComponent />
-          <NavItem>
+          </Nav>
+          <Nav pullRight>
+            <LoginComponent />
+            <NavItem>
 
-          </NavItem>
+            </NavItem>
 
-        </Nav>
+          </Nav>
         </Navbar.Collapse>
-        );
+      );
 
     }
 
