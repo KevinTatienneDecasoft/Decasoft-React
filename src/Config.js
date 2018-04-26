@@ -1,6 +1,6 @@
 export default class Config {
     static IP() {
-        return "192.168.0.11";
+        return "10.31.0.85";
     }
 
     static PORT() {
