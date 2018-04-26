@@ -5,6 +5,25 @@ import Session from '../../Session';
 
 import { Nav, Navbar, NavItem } from 'react-bootstrap';
 
+// class NavigationComponent extends React.Component {
+
+//   componentWillMount() {
+    
+//   }
+
+//     render() {
+//         return (
+//         <Navbar inverse collapseOnSelect>
+//             <Navbar.Header>
+//               <Navbar.Brand>
+//                 <a href="#brand">MyWorkCar React</a>
+//               </Navbar.Brand>
+//               <Navbar.Toggle />
+//             </Navbar.Header>
+//             <Navbar.Collapse>
+//               <Nav>
+//                 <NavItem eventKey={1} href="#">
+//                   Home
 class NavigationComponent extends Session {
 
   constructor() {
