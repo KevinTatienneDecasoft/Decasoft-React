@@ -9,6 +9,8 @@ import Slider from 'rc-slider';
 import Geocode from 'react-geocode';
 import 'rc-slider/assets/index.css';
 
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, DirectionsRenderer } from "react-google-maps";
+
 //images
 import smoke from '../../image/smoke.png';
 import music from '../../image/music.png';
@@ -16,6 +18,7 @@ import blabla from '../../image/blabla.png';
 import woman from '../../image/woman.png';
 import man from '../../image/man.png';
 import loginImg from '../../image/login.png';
+
 import Config from '../../Config';
 
 const customStyles = {
@@ -25,18 +28,18 @@ const customStyles = {
         right: 'auto',
         bottom: 'auto',
         marginRight: '-30%',
-        width: '40%',
-        height: '900px',
+        width: '31%',
+        height: '700px',
         transform: 'translate(-50%, -50%)'
     }
 };
 
-//const IP = "10.31.1.166";
-const IP = "192.168.0.11";
 const DRIVER = "Driver";
 const MAN = "Man";
 const HOME = "Home";
 const DEST = "Dest";
+
+const google = window.google;
 
 Geocode.setApiKey("AIzaSyA50y7GQTZUHEo5e2kKHffvzv9xOUGop3E");
 
@@ -71,7 +74,7 @@ class LoginComponent extends Session {
             adrHome: '',
             sexe: MAN,
             statusUser: DRIVER,
-            adrDest: '9 rue de gembloux 31500 Toulouse',
+            adrDest: '11 Rue Bida, 31000 Toulouse',
             errorLogin: false,
             successRegister: false,
             loginAction: true,
@@ -205,13 +208,28 @@ class LoginComponent extends Session {
                         homeLongitude: responseCoord.lng
                     });
                 }
-
             },
             error => {
                 console.error(error);
             }
         );
+    }
 
+    sendToRegisterHttp(user) {
+        axios.post("http://" + Config.IP() + ":" + Config.PORT() + "/user/register", JSON.stringify(user), axiosConfig).then((response) => {
+                if (!response.data) {
+                    
+                } else {
+                    this.setState({ successRegister: true });
+
+                    setTimeout(() => {
+                        this.setState({ successRegister: false });
+                        this.setState({ loginAction: true });
+                    }, 2000);
+                }
+            }).catch((error) => {
+                alert("Erreur serveur");
+            });
     }
 
     registerSubmit(event) {
@@ -242,23 +260,34 @@ class LoginComponent extends Session {
             user.destLongitude = this.state.destLongitude;
             user.homeLatitude = this.state.homeLatitude;
             user.homeLongitude = this.state.homeLongitude;
-            
-            //console.log(user);
-            axios.post("http://" + Config.IP() + ":" + Config.PORT() + "/user/register", user, axiosConfig).then((response) => {
-                if (!response.data) {
-                    
-                } else {
-                    console.log(response);
-                    this.setState({ successRegister: true });
 
-                    setTimeout(() => {
-                        this.setState({ successRegister: false });
-                        this.setState({ loginAction: true });
-                    }, 2000);
-                }
-            }).catch((error) => {
-                alert("Erreur serveur");
-            });
+
+            let DirectionsService = new google.maps.DirectionsService();
+            if (user.driver) {
+                DirectionsService.route({
+                    origin: new google.maps.LatLng(parseFloat(user.homeLatitude), parseFloat(user.homeLongitude)),
+                    destination: new google.maps.LatLng(parseFloat(user.destLatitude), parseFloat(user.destLongitude)),
+                    travelMode: google.maps.TravelMode.DRIVING,
+                }, (result, status) => {
+                    if (result.routes["0"].legs["0"].steps.length > 0) {
+                        let Tbl = [];
+                        result.routes["0"].legs["0"].steps.forEach(element => {
+                            let latitude = element.start_location.lat();
+                            let longitude = element.start_location.lng();
+                            let coordonnee = { latitude: latitude, longitude: longitude };
+                            Tbl.push(coordonnee);
+                        });
+                        user.segmentPositions = Tbl;
+                        console.log(user);
+                        this.sendToRegisterHttp(user);
+                    }
+
+
+                });
+            } else {
+                console.log(user);
+                this.sendToRegisterHttp(user);
+            }
         });
     }
 

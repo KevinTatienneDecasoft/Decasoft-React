@@ -4,7 +4,6 @@ import axios from 'axios';
 import User from '../../models/user';
 import { FormGroup, ControlLabel, FormControl, Row, Col, Radio, Grid } from 'react-bootstrap';
 import DestinatorComponent from '../DestinatorComponent/Destinator';
-import ListMessageComponent from '../ListMessageComponent/ListMessage';
 import MessageComponent from '../MessageComponent/Message';
 
 import Session from '../../Session';
@@ -12,6 +11,7 @@ import Config from '../../Config';
 
 import chatImg from '../../image/chat.png';
 import profilImg from '../../image/img_avatar2.png';
+import MessageModel from '../../models/messageModel';
 
 const imageStyle = {
     width: '50%'
@@ -38,13 +38,14 @@ class ListDestinatorComponent extends Session {
         super();
         this.state = {
             messageToSend: '',
+            contactUsername: '',
             displayForm: false,
             listDestinator: [],
             listMessage: []
         }
 
 
-        this.getAllMessages();
+        this.updateDestinators();
         this.openChat = this.openChat.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
@@ -60,7 +61,6 @@ class ListDestinatorComponent extends Session {
 
     getAllMessages() {
         let session = super.getSession();
-        let self = this;
         if (session) {
             let object = JSON.parse(session);
             let token = object.token;
@@ -69,25 +69,19 @@ class ListDestinatorComponent extends Session {
                 if (!res.data) {
                     console.log("error");
                 } else {
-                    console.log(res.data);
-                    self.setState({ listDestinator: res.data });
+                    this.setState({ listDestinator: res.data });
+                    this.getListMessages();
                 }
             });
         }
-        setInterval(function () {
-            if (session) {
-                let object = JSON.parse(session);
-                let token = object.token;
+    }
 
-                axios.post("http://" + Config.IP() + ":" + Config.PORT() + "/chat/getAllMessages", token, axiosConfig).then((res) => {
-                    if (!res.data) {
-                        console.log("error");
-                    } else {
-                        console.log(res.data);
-                        self.setState({ listDestinator: res.data });
-                    }
-                });
-            }
+    updateDestinators() {
+        let session = super.getSession();
+        let self = this;
+        this.getAllMessages(this);
+        setInterval(function () {
+            self.getAllMessages(self);
         }, 10000);
 
     }
@@ -105,10 +99,62 @@ class ListDestinatorComponent extends Session {
         return time;
     }
 
+    getListMessages() {
+        let contactUsername = this.state.contactUsername;
+
+        if (contactUsername != '') {
+            let session = super.getSession();
+
+            let tabMessages = [];
+            this.state.listDestinator.forEach(e => {
+
+                let pseudo = Object.keys(e)[0];
+                let tabMessage = e[pseudo];
+
+                //console.log(contactUsername, pseudo);
+
+                if (contactUsername === pseudo) {
+
+                    tabMessage.forEach(listmessage => {
+                        var date = this.timeConverter(listmessage.timestamp);
+
+                        let statusItem;
+                        let className;
+                        if (listmessage.fromUsername !== JSON.parse(session).username) {
+                            statusItem = "reception";
+                            className = "receveMessage";
+                        } else {
+                            statusItem = "send";
+                            className = "sendMessage";
+                        }
+
+                        let item = {
+                            date: date,
+                            title: listmessage.message,
+                            status: statusItem,
+                            className: className
+                        };
+
+                        tabMessages.push(item);
+                    });
+
+                }
+
+            });
+            this.setState({
+                listMessage: tabMessages,
+                displayForm: true
+            });
+        }
+
+
+    }
+
     openChat(e) {
         let pseudo = e.target.id;
-        console.log(pseudo);
-
+        this.setState({ contactUsername: pseudo });
+        this.updateDestinators();
+/*
         let session = super.getSession();
 
         let tabMessages = [];
@@ -120,10 +166,11 @@ class ListDestinatorComponent extends Session {
                 var date = this.timeConverter(listmessage.timestamp);
 
                 let statusItem;
+                let className;
                 if (listmessage.fromUsername === session.username) {
-                    statusItem = "send";
-                } else {
                     statusItem = "reception";
+                } else {
+                    statusItem = "send";
                 }
 
                 let item = {
@@ -139,20 +186,24 @@ class ListDestinatorComponent extends Session {
         this.setState({
             listMessage: tabMessages,
             displayForm: true
-        });
+        });*/
     }
 
     sendMessage() {
-        console.log(this.state);
+        let session = super.getSession();
         let messageValue = this.state.messageToSend;
+
         if (messageValue) {
-            let date = "DATE A VOIR";
-            let messageObject = {
-                date: date,
-                title: messageValue,
-                status: "send"
-            }
-            this.setState({ listMessage: this.state.listMessage.concat(messageObject) });
+            let sendMessagePost = new MessageModel();
+            sendMessagePost.token = JSON.parse(session).token;
+            sendMessagePost.message = messageValue;
+            sendMessagePost.toUsername = this.state.contactUsername;
+            console.log(sendMessagePost);
+
+            axios.post("http://" + Config.IP() + ":" + Config.PORT() + "/chat/send", JSON.stringify(sendMessagePost), axiosConfig).then((res) => {
+                this.setState({ messageToSend: '' });
+                this.getAllMessages();
+            });
         }
         else {
             alert('Message is empty');
@@ -168,13 +219,12 @@ class ListDestinatorComponent extends Session {
         if (this.state.listDestinator.length == 0) {
             result = (<div><h3>Aucun messages, allez sur l'onglet Map pour contacter un utilisateur sur votre chemin</h3></div>);
         } else {
-            this.state.listDestinator.forEach(e => {
+            this.state.listDestinator.forEach((e, index) => {
 
                 let pseudo = Object.keys(e)[0];
                 let tabMessage = e[pseudo];
-                console.log(tabMessage.length);
                 content.push(
-                    <Col className="destinator list-group-item">
+                    <Col key={index} className="destinator list-group-item">
                         <Row>
                             <Col md={4}>
                                 <img src={profilImg} style={imageStyle} alt="profil-image" />
@@ -197,8 +247,8 @@ class ListDestinatorComponent extends Session {
 
         let messagesChat = [];
 
-        this.state.listMessage.forEach(e => {
-            messagesChat.push(<MessageComponent title={e.title} status={e.status} date={e.date} />);
+        this.state.listMessage.forEach((e, index) => {
+            messagesChat.push(<MessageComponent key={index} title={e.title} status={e.status} date={e.date} />);
         });
 
         let renderForm;
@@ -219,7 +269,7 @@ class ListDestinatorComponent extends Session {
                 <div>
                     <Row>
                         <Col md={3}>
-                            <ul class="list-group">
+                            <ul className="list-group">
                                 {result}
                             </ul>
                         </Col>

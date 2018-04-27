@@ -216,10 +216,6 @@ class AboutComponent extends React.Component {
                                         </label>
                                         <br />
                                         <label>
-                                            thomas GAGEY
-                                        </label>
-                                        <br />
-                                        <label>
                                             Richard POSTEL
                                         </label>
                                         <br />
@@ -247,7 +243,7 @@ class AboutComponent extends React.Component {
                                         <Panel.Body>
                                         <label>
                                                 technology used for the WebSite : <br />
-                                                HTML / CSS / AJAX / JQUERY / W3.CSS 
+                                                React JS / CSS / bootstrap
                                         </label>
                                         <br />
                                         <label>
@@ -306,9 +302,9 @@ class AboutComponent extends React.Component {
                         <Panel bsStyle="info">
 
                             <Panel.Body>
-                                <Button onClick={this.handleClickFaq} style={sizeButton}>FAQ</Button>
+                                <Button className="btn btn-info" onClick={this.handleClickFaq} style={sizeButton}>FAQ</Button>
 
-                                <Button onClick={this.handleClickAbout} style={sizeButton}>ABOUT</Button>
+                                <Button className="btn btn-info" onClick={this.handleClickAbout} style={sizeButton}>ABOUT</Button>
                             </Panel.Body>
                         </Panel>
 
